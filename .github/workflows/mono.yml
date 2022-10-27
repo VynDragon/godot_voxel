@@ -1,5 +1,5 @@
 name: 🐒 Mono Builds
-on:
+on: [workflow_dispatch]
   push:
     branches: [ master, github_actions ]
   pull_request:
