@@ -1,5 +1,10 @@
 name: 🐒 Mono Builds
-on: [workflow_dispatch]
+on: 
+  workflow_dispatch:
+    inputs:
+      git-ref:
+        description: Git Ref (Optional)    
+        required: fals
   push:
     branches: [ master, github_actions ]
   pull_request:
