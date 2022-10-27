@@ -71,11 +71,11 @@ jobs:
           scons --version
 
       # We should always be explicit with our flags usage here since it's gonna be sure to always set those flags
-      - name: Compile Godot (module_mono_enabled=yes mono_glue=no)
+      - name: Compile Godot (module_mono_enabled=yes)
         env:
           SCONS_CACHE: ${{github.workspace}}/.scons_cache/
         run: |
-          scons -j2 verbose=yes warnings=all werror=yes platform=linuxbsd tests=no target=editor dev_build=no debug_symbols=no module_mono_enabled=yes mono_glue=no copy_mono_root=yes
+          scons -j2 verbose=yes warnings=all werror=yes platform=linuxbsd tests=no target=editor dev_build=no debug_symbols=no module_mono_enabled=yes copy_mono_root=yes
 
       - name: Generate Mono Glue
         run: |
@@ -86,7 +86,6 @@ jobs:
         with:
           name: mono-glue
           path: |
-            modules/mono/glue/**.gen.*
             modules/mono/glue/GodotSharp/GodotSharp/Generated/
             modules/mono/glue/GodotSharp/GodotSharpEditor/Generated/
 
@@ -161,7 +160,7 @@ jobs:
         env:
           SCONS_CACHE: ${{github.workspace}}/.scons_cache/
         run: |
-          scons -j2 verbose=yes warnings=all werror=yes platform=linuxbsd tests=no target=editor dev_build=no debug_symbols=no module_mono_enabled=yes mono_glue=yes mono_static=yes copy_mono_root=yes
+          scons -j2 verbose=yes warnings=all werror=yes platform=linuxbsd tests=no target=editor dev_build=no debug_symbols=no module_mono_enabled=yes mono_static=yes copy_mono_root=yes
 
       # Make build available
       - uses: actions/upload-artifact@v2
@@ -239,7 +238,11 @@ jobs:
           SCONS_CACHE_MSVC_CONFIG: true
           SCONS_CACHE: /.scons_cache/
         run: |
-          scons -j2 verbose=yes warnings=all werror=yes platform=windows tests=no target=editor dev_build=no debug_symbols=no module_mono_enabled=yes mono_glue=yes copy_mono_root=yes mono_static=yes
+          scons -j2 verbose=yes warnings=all werror=yes platform=windows tests=no target=editor dev_build=no debug_symbols=no module_mono_enabled=yes copy_mono_root=yes mono_static=yes
+          
+      - name: Compilation (Mono)
+        run: |
+          python ./modules/mono/build_scripts/build_assemblies.py --godot-output-dir ./bin
 
       # TODO Such tests are able to run from Godot 4.0 only
       # Execute unit tests for the editor
