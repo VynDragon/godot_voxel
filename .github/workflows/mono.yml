@@ -4,7 +4,7 @@ on:
     inputs:
       git-ref:
         description: Git Ref (Optional)    
-        required: fals
+        required: false
   push:
     branches: [ master, github_actions ]
   pull_request:
